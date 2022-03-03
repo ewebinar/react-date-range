@@ -187,7 +187,7 @@ class DayCell extends Component {
           </span>)
           : (<span className={this.props.styles.dayNumber}>
             {
-              dayContentRenderer?.(this.props.day) ||
+              dayContentRenderer?.(format(this.props.day, this.props.dayDisplayFormat)) ||
               <span>{format(this.props.day, this.props.dayDisplayFormat)}</span>
             }
           </span>)
