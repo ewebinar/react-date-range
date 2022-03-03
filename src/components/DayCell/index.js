@@ -151,6 +151,13 @@ class DayCell extends Component {
     ));
   };
 
+  defineWeekNumberCellColor = () => {
+    if (this.props.smartSelection) {
+      return this.props.smartSelectionThemeColor;
+    }
+    return this.props.weekNumber ? '#fff' : '';
+  }
+
   render() {
     const { dayContentRenderer } = this.props;
     return (
@@ -169,7 +176,7 @@ class DayCell extends Component {
         {...(this.props.disabled || this.props.isPassive ? { tabIndex: -1 } : {})}
         style={{
           color: this.props.color,
-          backgroundColor: this.props.weekNumber ? '#fff' : '',
+          backgroundColor: this.defineWeekNumberCellColor(),
           width: this.props.broadcastCalendar ? 'calc(100% / 8)' : 'calc(100% / 7)',
         }}>
         {this.renderSelectionPlaceholders()}
@@ -180,7 +187,7 @@ class DayCell extends Component {
           </span>)
           : (<span className={this.props.styles.dayNumber}>
             {
-              dayContentRenderer?.(this.props.day) ||
+              dayContentRenderer?.(format(this.props.day, this.props.dayDisplayFormat)) ||
               <span>{format(this.props.day, this.props.dayDisplayFormat)}</span>
             }
           </span>)
