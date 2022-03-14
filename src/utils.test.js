@@ -1,5 +1,10 @@
 import { endOfMonth, startOfMonth } from 'date-fns';
-import { calcFocusDate, calculateBroadcastWeekNumber, shouldRenderBroadcastDay } from './utils';
+import {
+  calcFocusDate,
+  calculateBroadcastWeekNumber,
+  shouldRenderBroadcastDay,
+  defineCellBorder,
+} from './utils';
 
 describe('calcFocusDate', () => {
   const ranges = [
@@ -128,6 +133,89 @@ describe('shouldRenderBroadcastDay', () => {
       expect(shouldRenderBroadcastDay(new Date('04/01/2022'), MarchMonthNumber)).toBeFalsy();
       expect(shouldRenderBroadcastDay(new Date('04/02/2022'), MarchMonthNumber)).toBeFalsy();
       expect(shouldRenderBroadcastDay(new Date('04/03/2022'), MarchMonthNumber)).toBeFalsy();
+    });
+  });
+});
+
+describe('defineCellBorder', () => {
+  describe('should not have border styling', () => {
+    it('if is not droadcast calendar', () => {
+      const result = defineCellBorder({
+        disabled: true,
+        broadcastCalendar: false,
+        weekNumber: false,
+        month: new Date('03/31/2022'),
+        day: new Date('03/14/2022'),
+      });
+      expect(result).toEqual({});
+    });
+  
+    it('if day is not disabled', () => {
+      const result = defineCellBorder({
+        disabled: false,
+        broadcastCalendar: true,
+        weekNumber: false,
+        month: new Date('03/31/2022'),
+        day: new Date('03/14/2022'),
+      });
+      expect(result).toEqual({});
+    });
+  
+    it('if cell is weekNumber', () => {
+      const result = defineCellBorder({
+        disabled: true,
+        broadcastCalendar: true,
+        weekNumber: true,
+        month: new Date('03/31/2022'),
+        day: new Date('03/14/2022'),
+      });
+      expect(result).toEqual({});
+    });
+  });
+
+  describe('disabled broadcast days should have border styling', () => {
+    it('with top, right, bottom and left borders if day is sunday and is last brodacast week', () => {
+      const result = defineCellBorder({
+        disabled: true,
+        broadcastCalendar: true,
+        weekNumber: false,
+        month: new Date('03/27/2022'),
+        day: new Date('03/27/2022'),
+      });
+      expect(result.borderWidth).toEqual('1px 1px 1px 1px');
+    });
+
+    it('with top, right and left borders if day is sunday and is not last brodacast week', () => {
+      const result = defineCellBorder({
+        disabled: true,
+        broadcastCalendar: true,
+        weekNumber: false,
+        month: new Date('03/27/2022'),
+        day: new Date('03/20/2022'),
+      });
+      expect(result.borderWidth).toEqual('1px 1px 0px 1px');
+    });
+
+    it('with top, bottom and left borders if day is not sunday and is last brodacast week', () => {
+      const result = defineCellBorder({
+        disabled: true,
+        broadcastCalendar: true,
+        weekNumber: false,
+        month: new Date('03/27/2022'),
+        day: new Date('03/24/2022'),
+      });
+      expect(result.borderWidth).toEqual('1px 0px 1px 1px');
+    });
+
+    it('with top  and left borders if day is not sunday and is not last brodacast week', () => {
+      const result = defineCellBorder({
+        disabled: true,
+        broadcastCalendar: true,
+        weekNumber: false,
+        month: new Date('03/27/2022'),
+        day: new Date('03/15/2022'),
+      });
+      expect(result.borderWidth).toEqual('1px 0px 0px 1px');
     });
   });
 });

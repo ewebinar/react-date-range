@@ -130,3 +130,43 @@ export function shouldRenderBroadcastDay(calendarDate, calendarMonth) {
   }
   return true;
 }
+
+export function defineCellBorder(props) {
+  const {
+    disabled,
+    broadcastCalendar,
+    weekNumber,
+    month,
+    day,
+  } = props;
+  if (!disabled) return {};
+  if (!broadcastCalendar) return {};
+  if (weekNumber) return {};
+  const borderStyling = {
+    borderStyle: 'solid',
+    borderColor: '#bdbdbd',
+  };
+  const isLastBrodcastWeek = !shouldRenderBroadcastDay(addDays(day, 7), month.getMonth());
+  if (isSunday(day)) {
+    if (isLastBrodcastWeek) {
+      return {
+        ...borderStyling,
+        borderWidth: '1px 1px 1px 1px',
+      };
+    }
+    return {
+      ...borderStyling,
+      borderWidth: '1px 1px 0px 1px',
+    };
+  }
+  if (isLastBrodcastWeek) {
+    return {
+      ...borderStyling,
+      borderWidth: '1px 0px 1px 1px',
+    };
+  }
+  return {
+    ...borderStyling,
+    borderWidth: '1px 0px 0px 1px',
+  };
+}
