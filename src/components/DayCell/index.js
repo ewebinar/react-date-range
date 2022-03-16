@@ -3,6 +3,7 @@ import classnames from 'classnames';
 import { startOfDay, format, isSameDay, isAfter, isBefore, endOfDay } from 'date-fns';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { defineCellBorder } from '../../utils';
 
 class DayCell extends Component {
   constructor(props, context) {
@@ -155,6 +156,7 @@ class DayCell extends Component {
     if (this.props.smartSelection) {
       return this.props.smartSelectionThemeColor;
     }
+    if (this.props.disabled && this.props.broadcastCalendar) return '#fff';
     return this.props.weekNumber ? '#fff' : '';
   }
 
@@ -178,6 +180,7 @@ class DayCell extends Component {
           color: this.props.color,
           backgroundColor: this.defineWeekNumberCellColor(),
           width: this.props.broadcastCalendar ? 'calc(100% / 8)' : 'calc(100% / 7)',
+          ...defineCellBorder(this.props),
         }}>
         {this.renderSelectionPlaceholders()}
         {this.renderPreviewPlaceholder()}
