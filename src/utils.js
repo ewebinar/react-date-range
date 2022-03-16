@@ -89,22 +89,25 @@ export function generateStyles(sources) {
 }
 
 export function calculateBroadcastWeekNumber(currentDate) {
-  const isDecember = (currentDate.getMonth() + 1) === 12;
+  const isDecember = currentDate.getMonth() + 1 === 12;
   if (isDecember && getWeekOfMonth(currentDate) === 6) {
     return 1;
   }
   if (
-    isDecember
-    && getWeekOfMonth(currentDate) === 5
-    && !isSunday(currentDate)
-    && (nextSunday(currentDate).getMonth() + 1) !== 12
+    isDecember &&
+    getWeekOfMonth(currentDate) === 5 &&
+    !isSunday(currentDate) &&
+    nextSunday(currentDate).getMonth() + 1 !== 12
   ) {
     return 1;
-  };
+  }
   const firstDayOfTheYearDate = new Date(currentDate.getFullYear(), 0, 1);
   const firstDayOfTheYear = firstDayOfTheYearDate.getDay();
   const yearStartsOnSunday = firstDayOfTheYear === 0;
-  const broadcastStartOfWeek1Day = subDays(firstDayOfTheYearDate, yearStartsOnSunday ? 6 : firstDayOfTheYear - 1);
+  const broadcastStartOfWeek1Day = subDays(
+    firstDayOfTheYearDate,
+    yearStartsOnSunday ? 6 : firstDayOfTheYear - 1
+  );
   const days = Math.floor((currentDate - broadcastStartOfWeek1Day) / (24 * 60 * 60 * 1000));
   const weekNumber = Math.ceil((currentDate.getDay() + 1 + days) / 7);
   return weekNumber;
@@ -119,12 +122,12 @@ export function shouldRenderBroadcastDay(calendarDate, calendarMonth) {
     return false;
   }
   if (
-    weekOfMonth === 5
-    && calendarDate.getMonth() === calendarMonth
-    && lastDayOfWeek(calendarDate, { weekStartsOn: 1 }).getMonth() !== calendarMonth
+    weekOfMonth === 5 &&
+    calendarDate.getMonth() === calendarMonth &&
+    lastDayOfWeek(calendarDate, { weekStartsOn: 1 }).getMonth() !== calendarMonth
   ) {
     return false;
-  };
+  }
   if (weekOfMonth === 1 && calendarDate.getMonth() !== calendarMonth) {
     return false;
   }
@@ -132,41 +135,18 @@ export function shouldRenderBroadcastDay(calendarDate, calendarMonth) {
 }
 
 export function defineCellBorder(props) {
-  const {
-    disabled,
-    broadcastCalendar,
-    weekNumber,
-    month,
-    day,
-  } = props;
+  const { disabled, broadcastCalendar, weekNumber, month, day } = props;
   if (!disabled) return {};
   if (!broadcastCalendar) return {};
   if (weekNumber) return {};
-  const borderStyling = {
+
+  const isLastBrodcastWeek = !shouldRenderBroadcastDay(addDays(day, 7), month.getMonth());
+  return {
     borderStyle: 'solid',
     borderColor: '#bdbdbd',
-  };
-  const isLastBrodcastWeek = !shouldRenderBroadcastDay(addDays(day, 7), month.getMonth());
-  if (isSunday(day)) {
-    if (isLastBrodcastWeek) {
-      return {
-        ...borderStyling,
-        borderWidth: '1px 1px 1px 1px',
-      };
-    }
-    return {
-      ...borderStyling,
-      borderWidth: '1px 1px 0px 1px',
-    };
-  }
-  if (isLastBrodcastWeek) {
-    return {
-      ...borderStyling,
-      borderWidth: '1px 0px 1px 1px',
-    };
-  }
-  return {
-    ...borderStyling,
-    borderWidth: '1px 0px 0px 1px',
+    borderTopWidth: '1px',
+    borderLeftWidth: '1px',
+    borderRightWidth: isSunday(day) ? '1px' : '0px',
+    borderBottomWidth: isLastBrodcastWeek ? '1px' : '0px',
   };
 }

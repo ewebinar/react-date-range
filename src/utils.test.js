@@ -149,7 +149,6 @@ describe('defineCellBorder', () => {
       });
       expect(result).toEqual({});
     });
-  
     it('if day is not disabled', () => {
       const result = defineCellBorder({
         disabled: false,
@@ -160,7 +159,6 @@ describe('defineCellBorder', () => {
       });
       expect(result).toEqual({});
     });
-  
     it('if cell is weekNumber', () => {
       const result = defineCellBorder({
         disabled: true,
@@ -182,7 +180,10 @@ describe('defineCellBorder', () => {
         month: new Date('03/27/2022'),
         day: new Date('03/27/2022'),
       });
-      expect(result.borderWidth).toEqual('1px 1px 1px 1px');
+      expect(result.borderTopWidth).toEqual('1px');
+      expect(result.borderRightWidth).toEqual('1px');
+      expect(result.borderBottomWidth).toEqual('1px');
+      expect(result.borderLeftWidth).toEqual('1px');
     });
 
     it('with top, right and left borders if day is sunday and is not last brodacast week', () => {
@@ -193,7 +194,10 @@ describe('defineCellBorder', () => {
         month: new Date('03/27/2022'),
         day: new Date('03/20/2022'),
       });
-      expect(result.borderWidth).toEqual('1px 1px 0px 1px');
+      expect(result.borderTopWidth).toEqual('1px');
+      expect(result.borderRightWidth).toEqual('1px');
+      expect(result.borderBottomWidth).toEqual('0px');
+      expect(result.borderLeftWidth).toEqual('1px');
     });
 
     it('with top, bottom and left borders if day is not sunday and is last brodacast week', () => {
@@ -204,7 +208,10 @@ describe('defineCellBorder', () => {
         month: new Date('03/27/2022'),
         day: new Date('03/24/2022'),
       });
-      expect(result.borderWidth).toEqual('1px 0px 1px 1px');
+      expect(result.borderTopWidth).toEqual('1px');
+      expect(result.borderRightWidth).toEqual('0px');
+      expect(result.borderBottomWidth).toEqual('1px');
+      expect(result.borderLeftWidth).toEqual('1px');
     });
 
     it('with top  and left borders if day is not sunday and is not last brodacast week', () => {
@@ -215,7 +222,10 @@ describe('defineCellBorder', () => {
         month: new Date('03/27/2022'),
         day: new Date('03/15/2022'),
       });
-      expect(result.borderWidth).toEqual('1px 0px 0px 1px');
+      expect(result.borderTopWidth).toEqual('1px');
+      expect(result.borderRightWidth).toEqual('0px');
+      expect(result.borderBottomWidth).toEqual('0px');
+      expect(result.borderLeftWidth).toEqual('1px');
     });
   });
 });
